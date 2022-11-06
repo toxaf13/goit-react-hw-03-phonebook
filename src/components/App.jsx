@@ -3,18 +3,42 @@ import {ContactForm} from "./ContactForm/ContactForm";
 import {ContactsList} from "./ContactsList/ContactsList";
 import { Filter } from './filter/Filter';
 
+const INITIAL_STATE ={
+   contacts: [
+      {id: 'id-1', name: 'Rosie Simpson', phone: '459-12-56'},
+      {id: 'id-2', name: 'Hermione Kline', phone: '443-89-12'},
+      {id: 'id-3', name: 'Eden Clements', phone: '645-17-79'},
+      {id: 'id-4', name: 'Annie Copeland', phone: '227-91-26'},
+    ],
+    filter: '',
+}
 export class App extends Component {
    state = {
-      contacts: [
-        {id: 'id-1', name: 'Rosie Simpson', phone: '459-12-56'},
-        {id: 'id-2', name: 'Hermione Kline', phone: '443-89-12'},
-        {id: 'id-3', name: 'Eden Clements', phone: '645-17-79'},
-        {id: 'id-4', name: 'Annie Copeland', phone: '227-91-26'},
-      ],
+      contacts: [],
       filter: '',
       name: '',
       phone: ''
     }
+/////////////
+componentDidMount(){
+   const json = localStorage.getItem('contacts');
+   if(json == null){
+      localStorage.setItem('contacts', JSON.stringify(INITIAL_STATE.contacts));
+   }else {
+      const parseContacts = JSON.parse(json);
+      this.setState({contacts:parseContacts});
+   }
+}
+componentDidUpdate(prevProps,prevState){
+   if (prevState.contacts.length !== this.state.contacts.length){
+      const newContacts = this.state.contacts;
+      const json = JSON.stringify(newContacts);
+      localStorage.setItem('contacts',json);
+   }
+}
+/////////////
+
+
 
    handleAddContact = (newContact) =>
       this.setState(({contacts}) =>({
